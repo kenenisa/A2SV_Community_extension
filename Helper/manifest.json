@@ -22,7 +22,8 @@
         {
             "matches": [
                 "http://localhost:5500/*",
-                "http://127.0.0.1:5500/*"
+                "http://127.0.0.1:5500/*",
+                "https://leetcode.com/problems/*"
             ],
             "js": [
                 "js/script.js"
