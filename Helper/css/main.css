@@ -1,5 +1,66 @@
-body{
-    width:20rem;
-    background:rgb(255, 238, 206);
-    height:15rem;
+body {
+  width: 15rem;
+  height: 15rem;
+}
+img {
+  width: 100%;
+}
+.action {
+  text-align: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.082);
+  margin-bottom: 1rem;
+}
+.action span {
+  background: rgb(205, 238, 205);
+  color: rgb(2, 126, 2);
+  font-weight: bold;
+  padding: 0.2rem 0.3rem;
+  border-radius: 7px;
+  /* font-size:1rem; */
+}
+.links span {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+.links .link-con {
+  position: relative;
+  width: 100%;
+  display: flex;
+  margin-top: 0.5rem;
+}
+.links .link {
+  margin: 0 0.25rem;
+  background: rgba(0, 0, 0, 0.089);
+  padding: 0.25rem;
+  flex: 1;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+.link a:hover {
+  text-decoration: underline;
+}
+.register {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+.register div {
+  margin-left: 1rem;
+  background: rgba(42, 16, 158, 0.212);
+  border: 0px solid black;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.register div:hover {
+  text-decoration: underline;
 }
