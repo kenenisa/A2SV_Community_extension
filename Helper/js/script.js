@@ -42,13 +42,22 @@ loaded((submitButton) => {
 		const user = JSON.parse(localStorage["GLOBAL_DATA:value"]).userStatus;
 		const username = user.username;
 		const asi = user.activeSessionId;
-		const lang = JSON.parse(localStorage.global_lang); // lang used
+		const lang = document
+			.querySelector(
+				'[data-cy="lang-select"] .ant-select-selection-selected-value'
+			)
+			.title.toLowerCase(); // lang used
 		result(() => {
 			console.log("result obtained");
 			let code = localStorage[qId + "_" + asi + "_" + lang]; //code submitted
 			if (!code) {
-				code = localStorage[qId + "_" + 0 + "_" + lang];
+				code = localStorage[qId + "_0_" + lang];
 			}
+			console.log({
+				codeName: qId + "_0_" + lang,
+				shes: localStorage[qId + "_0_" + lang],
+				code,
+			});
 			const submissions =
 				document.getElementsByClassName("ant-table-tbody")[0].children
 					.length; //number of submissions
@@ -71,10 +80,13 @@ loaded((submitButton) => {
 				lang,
 			};
 			console.log(data);
-			// console.log(JSON.stringify(data));
 			fetch("http://localhost:5000/progress", {
 				method: "POST",
 				body: JSON.stringify(data),
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
 			}).then(() => {
 				alert("A2SV knows what you did");
 			});

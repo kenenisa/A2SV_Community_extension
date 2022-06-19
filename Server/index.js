@@ -6,6 +6,7 @@ const { findName, buildLink, CommitCode, EditCells } = require("./util.js");
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 (async function () {
 	//google sheets
@@ -22,14 +23,18 @@ app.use(express.urlencoded({ extended: true }));
 		// );
 		const data = req.body;
 		const InfoRows = await InfoSheet.getRows();
-		const name = findName(InfoRows, buildLink(data.site, data.username));
+		// console.log({ InfoRows });
+		const name = findName(
+			InfoRows,
+			buildLink(data.site, data.username)
+		).Name;
 		console.log({ name });
 		data.name = name;
 		//commit the code to github
 		const hyperLink = await CommitCode(data);
 		//edit the right cells on the sheet
 		await EditCells(data, ProgressSheet, hyperLink);
-
+		console.log("DONE!");
 		res.send("OK");
 	});
 

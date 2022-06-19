@@ -35,7 +35,7 @@ module.exports = {
 				}
 				return l.toLowerCase() === link.toLowerCase();
 			}
-		}).Name;
+		});
 	},
 	findRowPos: (rows, name) => {
 		const user = rows.find((row) => {
@@ -53,13 +53,14 @@ module.exports = {
 	CommitCode: async (data) => {
 		if (data.code) {
 			const date = new Date().toDateString().replace(/\s/g, "-");
+			const time = new Date().getTime();
 			const extension = lang[data.lang] || "txt";
 			const msg = data.lang + " - " + data.info.join("\n");
-			const code = Base64.encode(data.code);
-      //appropriate file path to store the code in
+			const code = Base64.encode(JSON.parse(data.code));
+			//appropriate file path to store the code in
 			const path = `${data.name.replace(/\s/g, "_")}/${date}/${
-				data.qId + ". " + data.qTitle
-			}.${extension}`;
+				data.qId + "_" + data.qTitle
+			}_at${time}.${extension}`;
 			await octokit.repos
 				.createOrUpdateFileContents({
 					owner: "kenenisa",
@@ -81,25 +82,25 @@ module.exports = {
 					},
 				})
 				.catch((e) => console.log(e));
-      // return link to where the code is stored
-			return `https://github/kenenisa/A2SV_Community/${path}`;
+			// return link to where the code is stored
+			return `https://github.com/kenenisa/A2SV_Community/blob/main/${path}`;
 		}
 	},
 	EditCells: async (data, ProgressSheet, hyperLink) => {
-    //find where the user row is
+		//find where the user row is
 		await ProgressSheet.loadCells("A:A");
 		const row = findProgressNameRow(ProgressSheet, data.name);
-    //find where the problem column is
+		//find where the problem column is
 		await ProgressSheet.loadCells("F4:4");
 		const column = findProblemCol(ProgressSheet, data.qTitle);
 		await ProgressSheet.loadCells(row + 1 + ":" + (row + 1));
-    //get the target cell for submissions and time spent
+		//get the target cell for submissions and time spent
 		const ProblemCell = ProgressSheet.getCell(row, column);
 		ProblemCell.value = data.submissions;
-		ProblemCell.hyperlink = hyperLink;
+		ProblemCell.formula = `=HYPERLINK("${hyperLink}", "${data.submissions}")`;
 		const TimeCell = ProgressSheet.getCell(row, column + 1);
 		TimeCell.value = Math.round(data.time / 1000 / 60);
-    //save any modification made
+		//save any modification made
 		await ProgressSheet.saveUpdatedCells();
 	},
 };
