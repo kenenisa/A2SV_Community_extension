@@ -4,13 +4,18 @@
 
 ### Components
 
-    * Helper Extension 
-        - This is where all the data about a progress is collected. It also is used for registration and other simple functionalities. The aim to make it work with zero configuration. 
-    * Server
-        - handles registration and progress tracking requests
-        - Manages external api calls and data manipulation
+* Helper Extension
+  * This is where all the data about a progress is collected. It also is used for registration and other
+       simple functionalities. The aim to make it work with zero configuration.
+* Server
+  * handles registration and progress tracking requests
+  * Manages external api calls and data manipulation
 
-**Note: The System makes a couple  important assumptions. 1. Names are unique and consistent across sheets. 2. Time spent are recorded from time of loading the question up to the last correct submission. 3. One best solution is submitted last*
+**Note: The System makes a couple  important assumptions.*
+
+* 1. Names are unique and consistent across sheets.
+* 2. Time spent are recorded from time of loading the question up to the last correct submission.
+* 3. One best solution is submitted last*
 
 ### Folder structure
 
