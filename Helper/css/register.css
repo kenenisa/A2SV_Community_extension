@@ -1,0 +1,51 @@
+.con{
+    position: relative;
+    margin: auto;
+    width:500px;
+}
+h1{
+    color:rgb(90, 90, 90)
+}
+img{
+    position: relative;
+    width:50%;
+    left:25%;
+    margin: auto;
+}
+.group{
+    margin-top:1.5rem;
+    padding-top:1rem;
+    border-top:1px solid rgba(0, 0, 0, 0.164);
+}
+input,label{
+    display: block;
+}
+input{
+    margin-bottom:1rem;
+    padding:0.5rem 0.75rem;
+    width:100%;
+    border:1px solid rgba(0, 0, 0, 0.185);
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+label{
+    margin-left:0.75rem;
+    font-size:1rem;
+}
+.title{
+    margin-bottom:1rem;
+    font-size:1rem;
+}
+button{
+    width:100%;
+    box-sizing: border-box;
+    padding:0.5rem 0.75rem;
+    margin-bottom:1rem;
+    border:1px solid rgb(202, 202, 202);
+    background:rgb(1, 81, 255);
+    font-size:1.2rem;
+    border-radius: 5px;
+    color:white;
+    cursor: pointer;
+}

@@ -1,0 +1,99 @@
+const { Octokit } = require("@octokit/rest");
+const { Base64 } = require("js-base64");
+const octokit = new Octokit({
+	auth: process.env.GITHUB_ACCESS_TOKEN,
+});
+console.log(process.env.GITHUB_ACCESS_TOKEN);
+const findProgressNameRow = (sheet, name) => {
+	let x = 0;
+	while (sheet.getCell(4 + x, 0)) {
+		const cell = sheet.getCell(4 + x, 0);
+		if (cell.value.toLowerCase() === name.toLowerCase()) {
+			return cell._row;
+		}
+		x += 1;
+	}
+};
+const findProblemCol = (sheet, problem) => {
+	let x = 0;
+	while (sheet.getCell(3, 6 + x)) {
+		const cell = sheet.getCell(3, 6 + x);
+		if (cell.value.toLowerCase() === problem.toLowerCase()) {
+			return cell._column;
+		}
+		x += 2;
+	}
+};
+
+module.exports = {
+	findName: (rows, link) => {
+		return rows.find((row) => {
+			let l = row.Leetcode;
+			if (l) {
+				if (l.slice(-1) === "/") {
+					l = l.slice(0, -1);
+				}
+				return l.toLowerCase() === link.toLowerCase();
+			}
+		}).Name;
+	},
+	findRowPos: (rows, name) => {
+		const user = rows.find((row) => {
+			if (row.name) {
+				return (
+					row.name.toLowerCase().trim() === name.toLowerCase().trim()
+				);
+			}
+		});
+		return user._rowNumber;
+	},
+	buildLink: (site, username) => {
+		return `https://${site}.com/${username}`;
+	},
+	CommitCode: async (data) => {
+		if (data.code) {
+			const date = new Date().toDateString().replace(/\s/g, "-");
+			const msg = data.lang + "\n" + data.info.join("\n");
+			const code = Base64.encode(data.code);
+      const path = `${data.name.replace(/\s/g, "_")}/${date}/${
+        data.qId + ". " + data.qTitle
+      }.txt`
+			await octokit.repos
+				.createOrUpdateFileContents({
+					owner: "kenenisa",
+					repo: "A2SV_Community",
+					path,
+          // path:'sample.txt',
+					content: code,
+					fullyQualifiedRef: "heads/master",
+					forceUpdate: true,
+					message: msg,
+					token: process.env.GITHUB_API_TOKEN,
+					author: {
+						name: "bot",
+						email: "helper@a2sv-353720.iam.gserviceaccount.com",
+					},
+					committer: {
+						name: "bot",
+						email: "helper@a2sv-353720.iam.gserviceaccount.com",
+					},
+				})
+				.catch((e) => console.log(e));
+        return `https://github/kenenisa/A2SV_Community/${path}`
+		}
+	},
+	EditCells: async (data, ProgressSheet,hyperLink) => {
+		await ProgressSheet.loadCells("A:A");
+		const row = findProgressNameRow(ProgressSheet, data.name);
+		await ProgressSheet.loadCells("F4:4");
+		const column = findProblemCol(ProgressSheet, data.qTitle);
+		await ProgressSheet.loadCells(row + 1 + ":" + (row + 1));
+		console.log("Loaded", `F${row}:${row}`);
+		const ProblemCell = ProgressSheet.getCell(row, column);
+		ProblemCell.value = data.submissions;
+		ProblemCell.hyperlink = hyperLink;
+		const TimeCell = ProgressSheet.getCell(row, column + 1);
+		TimeCell.value = Math.round(data.time / 1000 / 60);
+		await ProgressSheet.saveUpdatedCells();
+	},
+};

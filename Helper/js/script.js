@@ -62,8 +62,14 @@ loaded((submitButton) => {
         site: "leetcode",
         lang,
       };
-      localStorage.removeItem("A2SV_timer")
       console.log(data);
-    })
+      // console.log(JSON.stringify(data));
+      fetch("http://localhost:5000/progress", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }).then(() => {
+        alert("A2SV knows what you did");
+      });
+    });
   });
 });

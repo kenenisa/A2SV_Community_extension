@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - A2SV</title>
+    <link rel="stylesheet" href="css/register.css" />
+  </head>
+  <body>
+    <div class="con">
+      <img src="assets/hero.jpg" alt="hero" />
+      <h1>Register</h1>
+      <form action="http://localhost:5000/register" method="post">
+        <div class="group">
+          <div class="title">Name</div>
+          <input
+            required
+            type="text"
+            name="fname"
+            id="fname"
+            placeholder="Your name"
+          />
+          <input
+            required
+            type="text"
+            name="mname"
+            id="mname"
+            placeholder="Father's name"
+          />
+          <input
+            required
+            type="text"
+            name="lname"
+            id="lname"
+            placeholder="Grandfather's name"
+          />
+        </div>
+        <div class="group">
+          <div class="title">Links</div>
+
+          <input
+            required
+            type="text"
+            name="leet"
+            id="leet"
+            placeholder="Leetcode profile link"
+          />
+          <input
+            required
+            type="text"
+            name="hacker"
+            id="hacker"
+            placeholder="Hacker rank profile link"
+          />
+          <input
+            required
+            type="text"
+            name="codeforce"
+            id="codeforce"
+            placeholder="Code forces profile link"
+          />
+        </div>
+        <div class="group">
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

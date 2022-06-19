@@ -11,13 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@octokit/rest": "^18.12.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
+    "google-spreadsheet": "^3.3.0",
+    "googleapis": "^39.2.0",
+    "js-base64": "^3.7.2",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.6.5"
-  },
-  "engines": {
-    "node": "14.x"
   }
 }
