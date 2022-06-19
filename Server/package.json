@@ -1,14 +1,14 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "server that processes external apis and support script requests",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "node tester.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kenenisa Alemayehu",
   "license": "ISC",
   "dependencies": {
     "@octokit/rest": "^18.12.0",
