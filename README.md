@@ -13,15 +13,15 @@
 
 **Note: The System makes a couple  important assumptions.*
 
-* 1. Names are unique and consistent across sheets.
-* 2. Time spent are recorded from time of loading the question up to the last correct submission.
-* 3. One best solution is submitted last*
+  1. Names are unique and consistent across sheets.
+  2. Time spent are recorded from time of loading the question up to the last correct submission.
+  3. One best solution is submitted last*
 
 ### Folder structure
 
 The `root` contains 2 directories:
-`Helper`: Contains a chrome extension project and all of it's scripts.
-`Server`: Contains an express server.
+* `Helper`: Contains a chrome extension project and all of it's scripts.
+* `Server`: Contains an express server.
 
 ### Setup
 
