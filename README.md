@@ -43,6 +43,8 @@ You are welcome to contribute to this project. There are 2 ways you can contribu
 1. You can use and inspect the project and submit issues through github issues. You can open them any time and someone will solve them.
 2. You can directly work on the code base. First you need to clone or fork the repo and work on your own version. When you're done you can submit a pull request to this repo. It will be reviewed and merged to the master branch here.
 
+For more please checkout (CONTRIBUTION)[https://github.com/kenenisa/A2SV_Community_extension/blob/master/CONTRIBUTING.md]
+
 Please don't shy away from both or any of the above contributions.
 
 **Note: This is an Alpha version(0.0.1). It hasn't been tested or used properly and it has critical issues that need to be fixed first.**
