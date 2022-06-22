@@ -40,6 +40,8 @@ app.use(express.json());
 
 	app.post("/register", (req, res) => {
 		console.log(req.body);
+		const InfoRows = await InfoSheet.getRows();
+
 		res.send("<h1>This will work soon!</h1>");
 	});
 
