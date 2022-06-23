@@ -6,7 +6,7 @@
 
 * Helper Extension
   * This is where all the data about a progress is collected. It also is used for registration and other
-       simple functionalities. The aim is to make it work with zero configuration or out of the box.
+       simple functionalities. The aim is to make it work with zero configuration and out of the box.
 * Server
   * handles registration and progress tracking requests
   * Manages external api calls and data manipulation
@@ -20,6 +20,7 @@
 ### Folder structure
 
 The `root` contains 2 directories:
+
 * `Helper`: Contains a chrome extension project and all of it's scripts.
 * `Server`: Contains an express server.
 
