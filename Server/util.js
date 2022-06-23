@@ -7,12 +7,17 @@ const octokit = new Octokit({
 });
 const findProgressNameRow = (sheet, name, ProgressSheetGrid) => {
 	let x = 0;
-	while (ProgressSheetGrid.rowCount > x) {
-		const cell = sheet.getCell(4 + x, 0);
-		if (cell.value.toLowerCase() === name.toLowerCase()) {
-			return cell._row;
+	try{
+
+		while (ProgressSheetGrid.rowCount > x) {
+			const cell = sheet.getCell(4 + x, 0);
+			if (cell.value.toLowerCase() === name.toLowerCase()) {
+				return cell._row;
+			}
+			x += 1;
 		}
-		x += 1;
+	}catch(e){
+		console.log(e);
 	}
 	return null;
 };
@@ -179,5 +184,22 @@ module.exports = {
 		// const emailCell = sheet.getCell()
 
 		// await sheet.saveUpdatedCells();
+	},
+	findEmptySpot: (sheet, ProgressSheetGrid) => {
+		let x = 0;
+		try {
+			while (ProgressSheetGrid.rowCount > x) {
+				const cell = sheet.getCell(4 + x, 0);
+				const cell2 = sheet.getCell(4 + x, 2);
+				console.log(cell.value,cell2.value);
+				if(!cell.value && cell2.value == 0){
+						return cell._row;
+				}
+				x += 1;
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		return null;
 	},
 };

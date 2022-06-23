@@ -2,7 +2,14 @@ const express = require("express");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 require("dotenv").config();
 const cors = require("cors");
-const { findName, buildLink, CommitCode, EditCells, addRecords } = require("./util.js");
+const {
+	findName,
+	buildLink,
+	CommitCode,
+	EditCells,
+	addRecords,
+	findEmptySpot,
+} = require("./util.js");
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -18,8 +25,26 @@ app.use(express.json());
 	const ProgressSheetGrid = ProgressSheet._rawProperties.gridProperties;
 
 	const InfoRows = await InfoSheet.getRows();
-
-
+	await ProgressSheet.loadCells("A:C");
+	const findProgressNameRow = (sheet, ProgressSheetGrid) => {
+		let x = 0;
+		try {
+			while (ProgressSheetGrid.rowCount > x) {
+				const cell = sheet.getCell(4 + x, 0);
+				const cell2 = sheet.getCell(4 + x, 2);
+				console.log(cell.value, cell2.value);
+				if (!cell.value && cell2.value == 0) {
+					return cell._row;
+				}
+				x += 1;
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		return null;
+	};
+	const row = findProgressNameRow(ProgressSheet, ProgressSheetGrid);
+	console.log({ row });
 	//routes
 	app.post("/progress", async (req, res) => {
 		const timer = new Date().getTime();
@@ -56,15 +81,30 @@ app.use(express.json());
 
 	app.post("/register", async (req, res) => {
 		const data = req.body;
-		console.log(data);
-		const name =
-				`${data.fname} ${data.mname} ${data.lname}`.toLowerCase();
-		const ok = await addRecords(InfoSheet,data,name)
+		const name = `${data.fname} ${data.mname} ${data.lname}`.toLowerCase();
+		const row = findEmptySpot(ProgressSheet, ProgressSheetGrid);
+		let ok = await addRecords(InfoSheet, data, name);
+		if (!row) ok = false;
+		await ProgressSheet.loadCells({
+			startRowIndex: row,
+			endRowIndex: row + 1,
+			startColumnIndex: 0,
+			endColumnIndex: 1,
+		});
+		const availableCell = ProgressSheet.getCell(row, 0);
+		availableCell.value = name;
 		// const ok = true;
-		if(ok){
-			res.redirect(data.source+'?name='+name.replace(/\s/g,'_')+'&problem=https://leetcode.com/problems/fizz-buzz/')
-		}else{
-			res.redirect(data.source+'?error='+ok)
+		await ProgressSheet.saveUpdatedCells();
+
+		if (ok) {
+			res.redirect(
+				data.source +
+					"?name=" +
+					name.replace(/\s/g, "_") +
+					"&problem=https://leetcode.com/problems/fizz-buzz/"
+			);
+		} else {
+			res.redirect(data.source + "?error=" + ok);
 		}
 	});
 
