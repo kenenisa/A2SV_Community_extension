@@ -144,6 +144,40 @@ module.exports = {
 			console.log(e);
 			return "FailedToEdit";
 		}
-		return 'OK'
+		return "OK";
+	},
+	addRecords: async (sheet, data,name) => {
+		try {
+			
+			await sheet.addRow({
+				Name: name,
+				Email: data.email,
+				"Phone Number": data.phone,
+				Instagram: data.instagram,
+				Birthday: data.birthday,
+				Joined: new Date().toDateString(),
+				"Short Bio": data.bio,
+				"Expected Graduation Date": data.graduationDate,
+				University: data.university,
+				Department: data.department,
+				Leetcode: data.leet,
+				Hackerrank: data.hacker,
+				Codeforces: data.codeforce,
+				Github: data.Github,
+				"Favorite Language": data.languages,
+				"Tshirt Color": data.shirtColor,
+				"Tshirt Size": data.shirtSize,
+			});
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
+		return true;
+		// await sheet.loadCells((row + 1) +':' + (row + 1))
+		// const nameCell = sheet.getCell(row,0)
+		// nameCell.value = name
+		// const emailCell = sheet.getCell()
+
+		// await sheet.saveUpdatedCells();
 	},
 };

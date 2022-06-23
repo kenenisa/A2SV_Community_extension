@@ -7,17 +7,18 @@
 		<title>Register - A2SV</title>
 		<link rel="stylesheet" href="css/register.css" />
 	</head>
+	
 	<body>
-    <script>
-      function processCache(e){
-        console.log(e);
-        return false
-      }
-    </script>
 		<div class="con">
+			<div class="alert" id="alert">
+				<div class="alert-head" id="alert-head">Failed</div>
+				<div class="alert-body" id="alert-body">You have been successfully registered!</div>
+				<button class="alert-btn" id="alert-btn">Try again</button>
+			</div>
 			<img src="assets/hero.jpg" alt="hero" />
 			<h1>Register</h1>
-			<form action="http://localhost:5000/register" method="post" onsubmit="return processCache(this)">
+			<form action="http://localhost:5000/register" method="post">
+				<input name="source" id="source" type="hidden" />
 				<div class="group">
 					<div class="title">Name*</div>
 					<input
@@ -103,13 +104,6 @@
 					<div class="title">Dates*</div>
 					<div class="title sm">Birthday</div>
 					<input required type="date" name="birthday" id="birthday" />
-					<input
-						required
-						type="date"
-						name="joined"
-						id="joined"
-						disabled
-					/>
 				</div>
 				<div class="group">
 					<div class="title">Education*</div>
@@ -136,7 +130,7 @@
 						placeholder="Department"
 					/>
 				</div>
-				<div class="group">
+				<!-- <div class="group">
 					<div class="title">CV</div>
 					<input
 						type="file"
@@ -148,11 +142,10 @@
 				<div class="group">
 					<div class="title">Photo</div>
 					<input required type="file" name="photo" id="photo" />
-				</div>
+				</div> -->
 				<div class="group">
 					<div class="title">Bio</div>
 					<input
-						required
 						type="text"
 						name="bio"
 						id="bio"
@@ -188,6 +181,11 @@
 				</div>
 			</form>
 		</div>
-    
+		<!-- <script>
+		chrome.storage.sync.set({shit: 'poop'}, function() {
+  console.log('Value is set to ' + value);
+});
+	</script> -->
+		<script src="./js/register.js"></script>
 	</body>
 </html>

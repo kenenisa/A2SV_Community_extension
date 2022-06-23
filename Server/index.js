@@ -2,8 +2,7 @@ const express = require("express");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 require("dotenv").config();
 const cors = require("cors");
-const { findName, buildLink, CommitCode, EditCells } = require("./util.js");
-const { cacheProblems } = require("./Caching.js");
+const { findName, buildLink, CommitCode, EditCells, addRecords } = require("./util.js");
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -17,10 +16,11 @@ app.use(express.json());
 	const InfoSheet = doc.sheetsByTitle["Info"];
 	const ProgressSheet = doc.sheetsByTitle["Progress Sheet"];
 	const ProgressSheetGrid = ProgressSheet._rawProperties.gridProperties;
-	//routes
 
 	const InfoRows = await InfoSheet.getRows();
-	// console.log({ InfoRows });
+
+
+	//routes
 	app.post("/progress", async (req, res) => {
 		const timer = new Date().getTime();
 
@@ -32,7 +32,6 @@ app.use(express.json());
 			InfoRows,
 			buildLink(data.site, data.username)
 		).Name;
-		console.log("DONE! name", (new Date().getTime() - timer) / 1000 + "s");
 
 		if (!name) {
 			res.send("NoName");
@@ -55,10 +54,18 @@ app.use(express.json());
 		res.end();
 	});
 
-	app.post("/register", (req, res) => {
-		console.log(req.body);
-
-		res.send("<h1>This will work soon!</h1>");
+	app.post("/register", async (req, res) => {
+		const data = req.body;
+		console.log(data);
+		const name =
+				`${data.fname} ${data.mname} ${data.lname}`.toLowerCase();
+		const ok = await addRecords(InfoSheet,data,name)
+		// const ok = true;
+		if(ok){
+			res.redirect(data.source+'?name='+name.replace(/\s/g,'_')+'&problem=https://leetcode.com/problems/fizz-buzz/')
+		}else{
+			res.redirect(data.source+'?error='+ok)
+		}
 	});
 
 	app.set("port", process.env.PORT || 5000);

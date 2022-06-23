@@ -1,55 +1,121 @@
-.con{
-    position: relative;
-    margin: auto;
-    width:500px;
+.con {
+	position: relative;
+	margin: auto;
+	width: 500px;
 }
-h1{
-    color:rgb(90, 90, 90)
+h1 {
+	color: rgb(90, 90, 90);
 }
-img{
-    position: relative;
-    width:50%;
-    left:25%;
-    margin: auto;
+img {
+	position: relative;
+	width: 50%;
+	left: 25%;
+	margin: auto;
 }
-.group{
-    margin-top:1.5rem;
-    padding-top:1rem;
-    border-top:1px solid rgba(0, 0, 0, 0.164);
+.group {
+	margin-top: 1.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.164);
 }
-input,label{
-    display: block;
+input,
+label {
+	display: block;
 }
-input{
-    margin-bottom:1rem;
-    padding:0.5rem 0.75rem;
-    width:100%;
-    border:1px solid rgba(0, 0, 0, 0.185);
-    border-radius: 5px;
-    box-sizing: border-box;
-
+input {
+	margin-bottom: 1rem;
+	padding: 0.5rem 0.75rem;
+	width: 100%;
+	border: 1px solid rgba(0, 0, 0, 0.185);
+	border-radius: 5px;
+	box-sizing: border-box;
 }
-label{
-    margin-left:0.75rem;
-    font-size:1rem;
+label {
+	margin-left: 0.75rem;
+	font-size: 1rem;
 }
-.title{
-    margin-bottom:1rem;
-    font-size:1rem;
+.title {
+	margin-bottom: 1rem;
+	font-size: 1rem;
 }
-.title.sm{
-    margin-bottom:0.5rem;
-    font-size:0.8rem;
+.title.sm {
+	margin-bottom: 0.5rem;
+	font-size: 0.8rem;
 }
-button{
-    width:100%;
-    box-sizing: border-box;
-    padding:0.5rem 0.75rem;
-    margin-bottom:1rem;
-    border:1px solid rgb(202, 202, 202);
-    background:rgb(1, 81, 255);
-    font-size:1.2rem;
-    border-radius: 5px;
-    color:white;
-    cursor: pointer;
+button {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.5rem 0.75rem;
+	margin-bottom: 1rem;
+	border: 1px solid rgb(202, 202, 202);
+	background: rgb(1, 81, 255);
+	font-size: 1.2rem;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+}
+.alert {
+	position: fixed;
+	width: 20rem;
+	height: 6rem;
+	top: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgb(248, 255, 248);
+	z-index: 10;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	box-shadow: 1px 2px 5px 1px rgba(221, 221, 221, 0.322);
+	font-size: 1rem;
+	padding: 1rem 0.5rem;
+	display: none;
+}
+@keyframes showUp {
+	from {
+		top: -5rem;
+		transform: translateX(-50%) rotateX(90deg);
+	}
+	to {
+		top: 1rem;
+		transform: translateX(-50%) rotateX(0);
+	}
+}
+.alert.failed,
+.alert.completed {
+	display: block;
+    animation: showUp 500ms forwards ease-in-out;
+}
+.alert .alert-head {
+	padding-bottom: 0.25rem;
+	margin-bottom: 0.5rem;
+	border-bottom: 1px solid #ddd;
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: darkgreen;
+}
+.alert .alert-body {
+	font-weight: 300;
+	margin-bottom: 1rem;
+}
+.alert .alert-btn {
+	text-align: center;
+	color: rgb(1, 33, 75);
+	padding: 0.4rem;
+	border-radius: 15px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 400;
+	border: unset;
+	background: rgba(0, 0, 0, 0);
+}
+.alert .alert-btn:hover {
+	background: #ddd;
+}
+.alert .alert-btn:active {
+	background: rgb(204, 204, 204);
+}
+.alert.failed {
+	background: rgb(255, 245, 245);
+}
+.alert.failed .alert-head {
+	color: darkred;
 }
