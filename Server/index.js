@@ -26,25 +26,7 @@ app.use(express.json());
 
 	const InfoRows = await InfoSheet.getRows();
 	await ProgressSheet.loadCells("A:C");
-	const findProgressNameRow = (sheet, ProgressSheetGrid) => {
-		let x = 0;
-		try {
-			while (ProgressSheetGrid.rowCount > x) {
-				const cell = sheet.getCell(4 + x, 0);
-				const cell2 = sheet.getCell(4 + x, 2);
-				console.log(cell.value, cell2.value);
-				if (!cell.value && cell2.value == 0) {
-					return cell._row;
-				}
-				x += 1;
-			}
-		} catch (e) {
-			console.log(e);
-		}
-		return null;
-	};
-	const row = findProgressNameRow(ProgressSheet, ProgressSheetGrid);
-	console.log({ row });
+
 	//routes
 	app.post("/progress", async (req, res) => {
 		const timer = new Date().getTime();
@@ -81,7 +63,11 @@ app.use(express.json());
 
 	app.post("/register", async (req, res) => {
 		const data = req.body;
-		const name = `${data.fname} ${data.mname} ${data.lname}`.toLowerCase();
+		const name = `${data.fname} ${data.mname} ${data.lname}`
+			.toLowerCase()
+			.split(" ")
+			.map((e) => e[0].toUpperCase() + e.slice(1))
+			.join(" ");
 		const row = findEmptySpot(ProgressSheet, ProgressSheetGrid);
 		let ok = await addRecords(InfoSheet, data, name);
 		if (!row) ok = false;
