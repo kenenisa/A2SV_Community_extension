@@ -1,6 +1,6 @@
 const { Octokit } = require("@octokit/rest");
 const { Base64 } = require("js-base64");
-const { cachedProblems } = require("./Caching");
+const { cachedProblems } = require("./caching.js");
 const lang = require("./langs.json");
 const octokit = new Octokit({
 	auth: process.env.GITHUB_ACCESS_TOKEN,

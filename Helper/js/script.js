@@ -1,6 +1,8 @@
 console.log("A2SV Script Loaded and Running...");
-localStorage.A2SV_timer = localStorage.A2SV_timer || new Date().getTime();
-//wait for submission result
+const config = {
+	// href: "http://localhost:5000",
+	href: "https://immense-sea-06160.herokuapp.com"
+};
 function id(str) {
 	return document.getElementById(str);
 }
@@ -209,7 +211,7 @@ loaded((submitButton) => {
 						lang,
 					};
 					console.log(data);
-					fetch("http://localhost:5000/progress", {
+					fetch(config.href + "/progress", {
 						method: "POST",
 						body: JSON.stringify(data),
 						headers: {

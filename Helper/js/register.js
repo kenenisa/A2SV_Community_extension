@@ -1,9 +1,3 @@
-// chrome.storage.sync.set({ shit: "poop" }, function (value) {
-// 	console.log("Value is set to " + value);
-// });
-// chrome.storage.sync.get(["shit"], function (result) {
-// 	console.log(result.shit);
-// });
 function id(str) {
 	return document.getElementById(str);
 }
