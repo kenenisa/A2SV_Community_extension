@@ -1,7 +1,7 @@
 {
     "name": "A2SV helper",
     "description": "This helps you automatically fill in your results in the sheets",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "manifest_version": 3,
     "action": {
         "default_popup": "index.html",
