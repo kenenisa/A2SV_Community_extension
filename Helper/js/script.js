@@ -38,7 +38,7 @@ const injectHTML = () => {
 			</div>
 			<div class="a-results">
 				<span id="a-sub"></span> submissions •
-				<span id="a-time"></span> spent
+				<span id="a-time"></span>mins spent
 			</div>
 			<div class="a-next" id="a-next-con">
 				Next up:
@@ -72,8 +72,8 @@ const displayPrompt = (e) => {
 	}
 
 	chrome.storage.sync.set(
-		{ nextProblems: e.next, name: e.name.replace(/\s/g,"_") },
-		function (value) {
+		{ nextProblems: e.next, name: e.name.replace(/\s/g, "_") },
+		function () {
 			id("a-progress").style.display = "block";
 			id("a-problem").innerHTML = e.solved;
 			id("a-sub").innerHTML = e.subs;
@@ -101,28 +101,7 @@ const displayPrompt = (e) => {
 		}
 	);
 };
-// setTimeout(() => {
-// 	displayPrompt({
-// 		solved: "Max Number Of K Sum",
-// 		subs: 2,
-// 		spent: "13min",
-// 		next: [
-// 			{
-// 				title: "Solving Questions",
-// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
-// 			},
-// 			{
-// 				title: "Brainpower Solving",
-// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
-// 			},
-// 			{
-// 				title: "Questions With Brainpower",
-// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
-// 			},
-// 		],
-// 		status: { status: "OK" },
-// 	});
-// }, 10000);
+
 //wait for submission result
 const result = (resolve) => {
 	const LookForResult = () => {
@@ -154,67 +133,98 @@ const loaded = (resolve) => {
 	};
 	Loading();
 };
+const recordStartingTime = (qTitle, resolve) => {
+	chrome.storage.sync.get(["time"], function (result) {
+		let time = result.time;
+		if (!time) {
+			time = {};
+		}
+		let origin = time[window.location.origin];
+		if (!origin) {
+			time[window.location.origin] = {};
+		}
+		if (!time[window.location.origin][qTitle]) {
+			time[window.location.origin][qTitle] = new Date().getTime();
+		}
+		chrome.storage.sync.set({ time }, function () {
+			resolve();
+		});
+	});
+};
+recordStartingTime("Fizz buzz", () => {});
+chrome.storage.sync.get(["time"], function (result) {
+	console.log(result);
+});
 // attach action when submit button is pressed
 loaded((submitButton) => {
-	submitButton.addEventListener("click", () => {
-		const [qId, qTitle] = document
-			.querySelector('[data-cy="question-title"]')
-			.innerHTML.split(". "); // question id and title
-		const user = JSON.parse(localStorage["GLOBAL_DATA:value"]).userStatus;
-		const username = user.username;
-		const asi = user.activeSessionId;
-		const lang = document
-			.querySelector(
-				'[data-cy="lang-select"] .ant-select-selection-selected-value'
-			)
-			.title.toLowerCase(); // lang used
-		result(() => {
-			console.log("result obtained");
-			let code = localStorage[qId + "_" + asi + "_" + lang]; //code submitted
-			if (!code) {
-				code = localStorage[qId + "_0_" + lang];
-			}
-			console.log({
-				codeName: qId + "_0_" + lang,
-				shes: localStorage[qId + "_0_" + lang],
-				code,
-			});
-			const submissions =
-				document.getElementsByClassName("ant-table-tbody")[0].children
-					.length; //number of submissions
-			const rawInfo = document.getElementsByClassName("info__2oQ9");
-			const info = [rawInfo[0], rawInfo[1]].map((el) => {
-				return el.innerHTML
-					.replace(/<[^>]*>/g, "")
-					.replace(/:[^;]*;/g, ": ");
-			}); // info thrown out by leet code
-			const time = new Date().getTime() - Number(localStorage.A2SV_timer); // time taken in ms
-			const data = {
-				code,
-				submissions,
-				info,
-				time,
-				qTitle,
-				qId,
-				username,
-				site: "leetcode",
-				lang,
-			};
-			console.log(data);
-			fetch("http://localhost:5000/progress", {
-				method: "POST",
-				body: JSON.stringify(data),
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-				},
-			})
-				.then((e) => e.json())
-				.then((e) => {
-					console.log(e);
-					displayPrompt(e);
-					// alert("A2SV knows what you did");
+	const [qId, qTitle] = document
+		.querySelector('[data-cy="question-title"]')
+		.innerHTML.split(". "); // question id and title
+	recordStartingTime(qTitle, () => {
+		submitButton.addEventListener("click", () => {
+			const user = JSON.parse(
+				localStorage["GLOBAL_DATA:value"]
+			).userStatus;
+			const username = user.username;
+			const asi = user.activeSessionId;
+			const lang = document
+				.querySelector(
+					'[data-cy="lang-select"] .ant-select-selection-selected-value'
+				)
+				.title.toLowerCase(); // lang used
+			result(() => {
+				console.log("result obtained");
+				let code = localStorage[qId + "_" + asi + "_" + lang]; //code submitted
+				if (!code) {
+					code = localStorage[qId + "_0_" + lang];
+				}
+				console.log({
+					codeName: qId + "_0_" + lang,
+					shes: localStorage[qId + "_0_" + lang],
+					code,
 				});
+				const submissions =
+					document.getElementsByClassName("ant-table-tbody")[0]
+						.children.length; //number of submissions
+				const rawInfo = document.getElementsByClassName("info__2oQ9");
+				const info = [rawInfo[0], rawInfo[1]].map((el) => {
+					return el.innerHTML
+						.replace(/<[^>]*>/g, "")
+						.replace(/:[^;]*;/g, ": ");
+				}); // info thrown out by leet code
+				chrome.storage.sync.get(["time"], function (result) {
+					console.log(result);
+					const time =
+						new Date().getTime() -
+						Number(result.time[window.location.origin][qTitle]); // time taken in ms
+					const data = {
+						code,
+						submissions,
+						info,
+						time,
+						qTitle,
+						qId,
+						username,
+						site: "leetcode",
+						lang,
+					};
+					console.log(data);
+					fetch("http://localhost:5000/progress", {
+						method: "POST",
+						body: JSON.stringify(data),
+						headers: {
+							Accept: "application/json",
+							"Content-Type": "application/json",
+						},
+					})
+						.then((e) => e.json())
+						.then((e) => {
+							console.log(e);
+							displayPrompt(e);
+							// alert("A2SV knows what you did");
+						});
+				});
+			});
 		});
 	});
 });

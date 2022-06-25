@@ -62,7 +62,6 @@ app.use(express.json());
 		if(status.status === "OK"){
 			next = await findNextProblems(ProgressSheet,ProgressSheetGrid,status)
 		}
-		console.log(next);
 		console.log("DONE!", (new Date().getTime() - timer) / 1000 + "s");
 		res.json({
 			status,
