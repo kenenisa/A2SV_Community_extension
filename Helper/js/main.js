@@ -17,32 +17,34 @@ chrome.storage.sync.get(["name"], function (result) {
 	console.log(result);
 });
 
-function populateNextProblems(problems) {
+function populateNextProblems(problems, result) {
 	let p = "";
 	problems.forEach((problem) => {
 		p += '<button class="next-btn">' + problem + "</button>";
 	});
 	id("next").style.display = "block";
 	id("next-problems").innerHTML = p;
-    attachEventHandlers()
+	attachEventHandlers(result);
 }
-function attachEventHandlers(){
-    const buttons = cls("next-btn");
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", function (el) {
-            chrome.storage.sync.get(["nextProblems"], function (result) {
-				window.open(
-					result.nextProblems.find(
-						(e) => e.title === el.target.innerHTML
-					).link
-				,"_blank");
-			});
-        });
-    }
+function attachEventHandlers(result) {
+	const buttons = cls("next-btn");
+	for (let i = 0; i < buttons.length; i++) {
+		buttons[i].addEventListener("click", function (el) {
+			window.open(
+				result.nextProblems.find((e) => e.title === el.target.innerHTML)
+					.link,
+				"_blank"
+			);
+		});
+	}
 }
 chrome.storage.sync.get(["nextProblems"], function (result) {
-	populateNextProblems(result.nextProblems.map(r=>r.title))
-})
+	if (result.nextProblems) {
+		populateNextProblems(
+			result.nextProblems.map((r) => r.title),
+			result
+		);
+	}
+});
 
 // populateNextProblems(["Reverse Linked List", "Linked List", "Cycle Detection"]);
-

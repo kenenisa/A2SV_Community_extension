@@ -1,7 +1,7 @@
 console.log("A2SV Script Loaded and Running...");
 const config = {
 	// href: "http://localhost:5000",
-	href: "https://immense-sea-06160.herokuapp.com"
+	href: "https://immense-sea-06160.herokuapp.com",
 };
 function id(str) {
 	return document.getElementById(str);
@@ -91,11 +91,13 @@ const displayPrompt = (e) => {
 					chrome.storage.sync.get(
 						["nextProblems"],
 						function (result) {
-							window.location.assign(
-								result.nextProblems.find(
-									(e) => e.title === el.target.innerHTML
-								).link
-							);
+							if (result.nextProblems) {
+								window.location.assign(
+									result.nextProblems.find(
+										(e) => e.title === el.target.innerHTML
+									).link
+								);
+							}
 						}
 					);
 				});
@@ -153,10 +155,7 @@ const recordStartingTime = (qTitle, resolve) => {
 		});
 	});
 };
-recordStartingTime("Fizz buzz", () => {});
-chrome.storage.sync.get(["time"], function (result) {
-	console.log(result);
-});
+
 // attach action when submit button is pressed
 loaded((submitButton) => {
 	const [qId, qTitle] = document
