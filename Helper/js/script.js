@@ -1,6 +1,128 @@
 console.log("A2SV Script Loaded and Running...");
-console.log(document);
 localStorage.A2SV_timer = localStorage.A2SV_timer || new Date().getTime();
+//wait for submission result
+function id(str) {
+	return document.getElementById(str);
+}
+const injectHTML = () => {
+	// document.getElementsByTagName("body")[0].innerHTML += "<h1>GO GO SCRIPT</h1>"
+	// document.getElementsByTagName("head")[0].innerHTML += ``;
+	// const bdy = document.getElementsByTagName("body")[0].innerHTML;
+	document.getElementsByTagName("body")[0].innerHTML += `<style>
+			@keyframes AshowUp {
+				from {top: -5rem;transform: rotateX(90deg);}
+				to {top: 1rem;transform: rotateX(0);}
+			}
+			#a-progress {position: fixed;top: 1rem;right: 1rem;width: 20rem;background: rgb(248, 255, 248);z-index: 10;border-radius: 10px;border: 1px solid #ddd;box-shadow: 1px 2px 5px 1px rgba(221, 221, 221, 0.322);font-size: 0.9rem;padding: 1rem 0.5rem;animation: AshowUp 500ms forwards ease-in-out;font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;display: none;}
+			#a-progress #a-head {padding-bottom: 0.25rem;margin-bottom: 0.5rem;border-bottom: 1px solid #ddd;font-size: 1.1rem;font-weight: 500;color: darkgreen;}
+			#a-progress .a-problem,
+			#a-progress .a-results {font-weight: 400;color: rgb(58, 58, 58);font-size: 0.85rem;}
+			#a-progress .a-msg {font-size: 0.9rem;font-weight: 500;margin-top: 0.5rem;}
+			#a-progress .a-results {text-align: right;border-bottom: 1px solid #ddd;padding-bottom: 0.5rem;margin-bottom: 0.5rem;}
+			#a-progress .a-next-btn {text-align: center;color: rgb(1, 33, 75);padding: 0.4rem;border-radius: 15px;cursor: pointer;font-size: 0.95rem;font-weight: 400;border: unset;background: rgba(0, 0, 0, 0);}
+			#a-progress .a-next-btn:hover {background: #ddd;}
+			#a-progress .a-next-btn:active {background: rgb(204, 204, 204);}
+			#a-progress .x {position: absolute;top: 0rem;right: 0rem;background: rgba(0, 0, 0, 0);border: unset;font-size: 1.5rem;padding: 0.05rem 0.5rem;cursor: pointer;}
+			#a-progress .x:hover {background: rgba(0, 0, 0, 0.08);}
+			#a-progress.a-failed #a-head {color: darkred;}
+			#a-progress.a-failed .a-next,
+			#a-progress.a-failed .a-results {display: none;}
+		</style>
+		<div class="a-progress" id="a-progress">
+			<div class="a-head" id="a-head">
+				A2SV Progress
+				<span class="a-problem">• <i id="a-problem"></i></span>
+				<button class="x" id="x">×</button>
+			</div>
+			<div class="a-msg" id="a-msg">
+			</div>
+			<div class="a-results">
+				<span id="a-sub"></span> submissions •
+				<span id="a-time"></span> spent
+			</div>
+			<div class="a-next" id="a-next-con">
+				Next up:
+				<div id="a-next"></div>
+			</div>
+		</div>`;
+	// + bdy;
+};
+const errorMsg = (str) => {
+	return {
+		OK: "Your progress has been recorded on A2SV Progress Sheet.",
+		NoName: "Site account not found in info sheet",
+		NoMatchingName:
+			"Name found in info sheet doesn't match any names in progress sheet",
+		NoProblemExists: "This problem is not listed in the sheet",
+		FailedToEdit: "Failed to edit the sheet",
+	}[str];
+};
+const displayPrompt = (e) => {
+	injectHTML();
+	id("a-msg").innerHTML = errorMsg(e.status.status);
+	id("x").addEventListener("click", () => {
+		id("a-progress").style.display = "none";
+	});
+	if (e.status.status !== "OK") {
+		console.log(e);
+		id("a-progress").style.display = "block";
+		id("a-progress").className = "a-progress a-failed";
+		id("a-problem").innerHTML = "Failed to process";
+		return;
+	}
+
+	chrome.storage.sync.set(
+		{ nextProblems: e.next, name: e.name.replace(/\s/g,"_") },
+		function (value) {
+			id("a-progress").style.display = "block";
+			id("a-problem").innerHTML = e.solved;
+			id("a-sub").innerHTML = e.subs;
+			id("a-time").innerHTML = e.spent;
+			let btn = "";
+			e.next.forEach((n) => {
+				btn += `<button class="a-next-btn">${n.title}</button>`;
+			});
+			id("a-next").innerHTML = btn;
+			const buttons = document.getElementsByClassName("a-next-btn");
+			for (let i = 0; i < buttons.length; i++) {
+				buttons[i].addEventListener("click", function (el) {
+					chrome.storage.sync.get(
+						["nextProblems"],
+						function (result) {
+							window.location.assign(
+								result.nextProblems.find(
+									(e) => e.title === el.target.innerHTML
+								).link
+							);
+						}
+					);
+				});
+			}
+		}
+	);
+};
+// setTimeout(() => {
+// 	displayPrompt({
+// 		solved: "Max Number Of K Sum",
+// 		subs: 2,
+// 		spent: "13min",
+// 		next: [
+// 			{
+// 				title: "Solving Questions",
+// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
+// 			},
+// 			{
+// 				title: "Brainpower Solving",
+// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
+// 			},
+// 			{
+// 				title: "Questions With Brainpower",
+// 				link: "https://leetcode.com/problems/Solving-Questions-With-Brainpower",
+// 			},
+// 		],
+// 		status: { status: "OK" },
+// 	});
+// }, 10000);
 //wait for submission result
 const result = (resolve) => {
 	const LookForResult = () => {
@@ -19,7 +141,6 @@ const result = (resolve) => {
 	};
 	LookForResult();
 };
-//wait for submission result
 const loaded = (resolve) => {
 	const Loading = () => {
 		const submitButton = document.querySelector(
@@ -87,9 +208,13 @@ loaded((submitButton) => {
 					Accept: "application/json",
 					"Content-Type": "application/json",
 				},
-			}).then(() => {
-				alert("A2SV knows what you did");
-			});
+			})
+				.then((e) => e.json())
+				.then((e) => {
+					console.log(e);
+					displayPrompt(e);
+					// alert("A2SV knows what you did");
+				});
 		});
 	});
 });

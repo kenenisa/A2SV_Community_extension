@@ -1,70 +1,93 @@
 body {
-  width: 15rem;
-  height: 15rem;
+	width: 15rem;
+	height: auto;
 }
 img {
-  width: 100%;
+	width: 100%;
 }
 .action {
-  text-align: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.082);
-  margin-bottom: 1rem;
+	text-align: center;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.082);
+	margin-bottom: 1rem;
 }
 .action span {
-  background: rgb(205, 238, 205);
-  color: rgb(2, 126, 2);
-  font-weight: bold;
-  padding: 0.2rem 0.3rem;
-  border-radius: 7px;
-  /* font-size:1rem; */
+	background: rgb(205, 238, 205);
+	color: rgb(2, 126, 2);
+	font-weight: bold;
+	padding: 0.2rem 0.3rem;
+	border-radius: 7px;
+	/* font-size:1rem; */
 }
 .links span {
-  font-size: 1rem;
-  margin-top: 0.5rem;
+	font-size: 1rem;
+	margin-top: 0.5rem;
 }
 .links .link-con {
-  position: relative;
-  width: 100%;
-  display: flex;
-  margin-top: 0.5rem;
+	position: relative;
+	width: 100%;
+	display: flex;
+	margin-top: 0.5rem;
 }
 .links .link {
-  margin: 0 0.25rem;
-  background: rgba(0, 0, 0, 0.089);
-  padding: 0.25rem;
-  flex: 1;
-  text-align: center;
-  border-radius: 5px;
-  font-size: 1rem;
+	margin: 0 0.25rem;
+	background: rgba(0, 0, 0, 0.089);
+	padding: 0.25rem;
+	flex: 1;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 1rem;
 }
 a {
-  text-decoration: none;
-  color: black;
+	text-decoration: none;
+	color: black;
 }
 .link a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 .register {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin-top: 1.75rem;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	margin: 1rem 0;
 }
 .register div {
-  margin-left: 1rem;
-  background: rgba(42, 16, 158, 0.200);
-  border: 0px solid black;
-  padding: 0.25rem 0.75rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
+	margin-left: 1rem;
+	background: rgba(42, 16, 158, 0.2);
+	border: 0px solid black;
+	padding: 0.25rem 0.75rem;
+	border-radius: 5px;
+	font-size: 1rem;
+	cursor: pointer;
 }
 .register div:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
-.user{
-  font-size:0.9rem;
-  display:none;
+.user {
+	font-size: 0.9rem;
+	display: none;
+}
+.next {
+	margin-bottom: 0.5rem;
+	font-size: 1rem;
+  display:none
+}
+.next-btn {
+	text-align: center;
+	color:rgb(1, 33, 75);
+	padding: 0.4rem;
+	border-radius: 15px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 400;
+	border: unset;
+	background: rgba(0, 0, 0, 0.04);
+  margin-bottom:0.2rem
+}
+.next-btn:hover {
+	background: #ddd;
+}
+.next-btn:active {
+	background: rgb(204, 204, 204);
 }

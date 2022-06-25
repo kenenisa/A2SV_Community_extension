@@ -7,8 +7,7 @@ const octokit = new Octokit({
 });
 const findProgressNameRow = (sheet, name, ProgressSheetGrid) => {
 	let x = 0;
-	try{
-
+	try {
 		while (ProgressSheetGrid.rowCount > x) {
 			const cell = sheet.getCell(4 + x, 0);
 			if (cell.value.toLowerCase() === name.toLowerCase()) {
@@ -16,7 +15,7 @@ const findProgressNameRow = (sheet, name, ProgressSheetGrid) => {
 			}
 			x += 1;
 		}
-	}catch(e){
+	} catch (e) {
 		console.log(e);
 	}
 	return null;
@@ -104,7 +103,7 @@ module.exports = {
 			data.name,
 			ProgressSheetGrid
 		);
-		if (!row) return "NoMatchingName";
+		if (!row) return { status: "NoMatchingName" };
 		//find where the problem column is
 		let column;
 		const cachedColumn = cachedProblems(
@@ -122,14 +121,8 @@ module.exports = {
 				ProgressSheetGrid
 			);
 		}
-		if (!column) return "NoProblemExists";
+		if (!column) return { status: "NoProblemExists" };
 		try {
-			console.log({
-				startRowIndex: row,
-				endRowIndex: row + 1,
-				startColumnIndex: column,
-				endColumnIndex: column + 1,
-			});
 			await ProgressSheet.loadCells({
 				startRowIndex: row,
 				endRowIndex: row + 1,
@@ -147,13 +140,12 @@ module.exports = {
 			await ProgressSheet.saveUpdatedCells();
 		} catch (e) {
 			console.log(e);
-			return "FailedToEdit";
+			return { status: "FailedToEdit" };
 		}
-		return "OK";
+		return { status: "OK", row, column };
 	},
-	addRecords: async (sheet, data,name) => {
+	addRecords: async (sheet, data, name) => {
 		try {
-			
 			await sheet.addRow({
 				Name: name,
 				Email: data.email,
@@ -191,9 +183,8 @@ module.exports = {
 			while (ProgressSheetGrid.rowCount > x) {
 				const cell = sheet.getCell(4 + x, 0);
 				const cell2 = sheet.getCell(4 + x, 2);
-				console.log(cell.value,cell2.value);
-				if(!cell.value && cell2.value == 0){
-						return cell._row;
+				if (!cell.value && cell2.value == 0) {
+					return cell._row;
 				}
 				x += 1;
 			}
@@ -201,5 +192,30 @@ module.exports = {
 			console.log(e);
 		}
 		return null;
+	},
+	findNextProblems: async (ProgressSheet, ProgressSheetGrid, pos) => {
+		await ProgressSheet.loadCells(["4:4", `${pos.row + 1}:${pos.row + 1}`]);
+		let x = 0;
+		let col = [];
+		while (ProgressSheetGrid.columnCount > x) {
+			if (col.length < 3) {
+				const cell = ProgressSheet.getCell(pos.row, 6 + x);
+				if (!cell.value) {
+					col.push(6 + x);
+				}
+			} else {
+				col.length < 4;
+			}
+			x += 2;
+		}
+		const result = [];
+		col.forEach((c) => {
+			const resultCell = ProgressSheet.getCell(3, c);
+			result.push({
+				link: resultCell.hyperlink,
+				title: resultCell.value,
+			});
+		});
+		return result;
 	},
 };

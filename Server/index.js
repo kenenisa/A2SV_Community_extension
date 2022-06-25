@@ -9,7 +9,9 @@ const {
 	EditCells,
 	addRecords,
 	findEmptySpot,
+	findNextProblems,
 } = require("./util.js");
+const { cachedProblems } = require("./Caching.js");
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -56,8 +58,20 @@ app.use(express.json());
 			ProgressSheetGrid,
 			hyperLink
 		);
+		let next = ''
+		if(status.status === "OK"){
+			next = await findNextProblems(ProgressSheet,ProgressSheetGrid,status)
+		}
+		console.log(next);
 		console.log("DONE!", (new Date().getTime() - timer) / 1000 + "s");
-		res.send(status);
+		res.json({
+			status,
+			subs: data.submissions,
+			solved: data.qTitle,
+			spent: Math.floor(data.time / 1000 / 60),
+			next,
+			name
+		});
 		res.end();
 	});
 
