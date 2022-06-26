@@ -42,7 +42,7 @@ app.use(express.json());
 		).Name;
 
 		if (!name) {
-			res.send("NoName");
+			res.send({ status: { status: "NoName" } });
 			res.end();
 			return;
 		}
@@ -57,9 +57,13 @@ app.use(express.json());
 			ProgressSheetGrid,
 			hyperLink
 		);
-		let next = ''
-		if(status.status === "OK"){
-			next = await findNextProblems(ProgressSheet,ProgressSheetGrid,status)
+		let next = "";
+		if (status.status === "OK") {
+			next = await findNextProblems(
+				ProgressSheet,
+				ProgressSheetGrid,
+				status
+			);
 		}
 		console.log("DONE!", (new Date().getTime() - timer) / 1000 + "s");
 		res.json({
@@ -68,7 +72,7 @@ app.use(express.json());
 			solved: data.qTitle,
 			spent: Math.floor(data.time / 1000 / 60),
 			next,
-			name
+			name,
 		});
 		res.end();
 	});
