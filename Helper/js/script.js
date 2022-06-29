@@ -6,6 +6,27 @@ const config = {
 function id(str) {
 	return document.getElementById(str);
 }
+chrome.storage.sync.get(["time", "name"], function (result) {
+	console.log(result);
+});
+const injectHTMLSpinner = () => {
+	if (id("a-loader")) return;
+	document.getElementsByTagName("body")[0].innerHTML += `
+	<style>
+		@keyframes ARotate {from {transform: rotate(0deg)} to {transform: rotate(360deg)}}
+		#a-loader{position: fixed;top:1rem;right:0;border-top-left-radius: 2rem;border-bottom-left-radius: 2rem;background:white;border:1px solid #ddd;box-shadow: 1px 1px 10px 2px rgba(0,0,0,0.1);padding:0.5rem;height:3.5rem;width:14rem;display: flex;align-items: center}
+		#a-loader #a-spinner{position: relative;margin:0.25rem 0;width:2rem;height:2rem;border-right:5px solid darkgreen;border-bottom:5px solid darkgreen;border-top:5px solid rgba(0, 100, 0, 0);border-left:5px solid rgba(0, 100, 0, 0);border-radius:50%;display: inline-block;margin-right:0.5rem;animation: ARotate 500ms infinite}
+		#a-loader span{font-size:1rem;position:absolute;top:1rem;left:3rem;}
+	</style>
+	<div id="a-loader">
+	<div id="a-spinner"></div>
+	<span>Accessing A2SV sheets...</span>
+</div>`;
+};
+const startSpinner = () => {
+	injectHTMLSpinner();
+	id("a-loader").style.display = "block";
+};
 const injectHTML = () => {
 	// document.getElementsByTagName("body")[0].innerHTML += "<h1>GO GO SCRIPT</h1>"
 	// document.getElementsByTagName("head")[0].innerHTML += ``;
@@ -52,7 +73,7 @@ const injectHTML = () => {
 const errorMsg = (str) => {
 	return {
 		OK: "Your progress has been recorded on A2SV Progress Sheet.",
-		NoName: "Site account not found in info sheet",
+		NoName: "Site account not found in info sheet. Please check if you're name exists in the info sheet along with the right profile links",
 		NoMatchingName:
 			"Name found in info sheet doesn't match any names in progress sheet",
 		NoProblemExists: "This problem is not listed in the sheet",
@@ -61,6 +82,7 @@ const errorMsg = (str) => {
 };
 const displayPrompt = (e) => {
 	injectHTML();
+	id("a-loader").style.display = "none";
 	id("a-msg").innerHTML = errorMsg(e.status.status);
 	id("x").addEventListener("click", () => {
 		id("a-progress").style.display = "none";
@@ -155,7 +177,32 @@ const recordStartingTime = (qTitle, resolve) => {
 		});
 	});
 };
+const submitData = (data) => {
+	chrome.storage.sync.get(["time", "name"], function (result) {
+		console.log(result);
+		const time =
+			new Date().getTime() -
+			Number(result.time[window.location.origin][qTitle]); // time taken in ms
+		data.time = time;
+		data.name = result.name.replace(/_/g, " ");
 
+		console.log(data);
+		fetch(config.href + "/progress", {
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		})
+			.then((e) => e.json())
+			.then((e) => {
+				console.log(e);
+				displayPrompt(e);
+				// alert("A2SV knows what you did");
+			});
+	});
+};
 // attach action when submit button is pressed
 loaded((submitButton) => {
 	const [qId, qTitle] = document
@@ -175,6 +222,7 @@ loaded((submitButton) => {
 				.title.toLowerCase(); // lang used
 			result(() => {
 				console.log("result obtained");
+				startSpinner();
 				let code = localStorage[qId + "_" + asi + "_" + lang]; //code submitted
 				if (!code) {
 					code = localStorage[qId + "_0_" + lang];
@@ -193,38 +241,17 @@ loaded((submitButton) => {
 						.replace(/<[^>]*>/g, "")
 						.replace(/:[^;]*;/g, ": ");
 				}); // info thrown out by leet code
-				chrome.storage.sync.get(["time"], function (result) {
-					console.log(result);
-					const time =
-						new Date().getTime() -
-						Number(result.time[window.location.origin][qTitle]); // time taken in ms
-					const data = {
-						code,
-						submissions,
-						info,
-						time,
-						qTitle,
-						qId,
-						username,
-						site: "leetcode",
-						lang,
-					};
-					console.log(data);
-					fetch(config.href + "/progress", {
-						method: "POST",
-						body: JSON.stringify(data),
-						headers: {
-							Accept: "application/json",
-							"Content-Type": "application/json",
-						},
-					})
-						.then((e) => e.json())
-						.then((e) => {
-							console.log(e);
-							displayPrompt(e);
-							// alert("A2SV knows what you did");
-						});
-				});
+				const data = {
+					code,
+					submissions,
+					info,
+					qTitle,
+					qId,
+					username,
+					site: "leetcode",
+					lang,
+				};
+				submitData(data);
 			});
 		});
 	});

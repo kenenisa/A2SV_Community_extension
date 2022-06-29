@@ -36,18 +36,18 @@ app.use(express.json());
 		// 	'{"code":"\\"THIS IS THE CODE\\"","submissions":6,"info":["Runtime: 75 ms, faster than 84.62% of JavaScript online submissions for Fizz Buzz.","Memory Usage: 44.4 MB, less than 62.00% of JavaScript online submissions for Fizz Buzz."],"time":130809,"qTitle":"Fizz Buzz","qId":"412","username":"kenenisa","site":"leetcode","lang":"php"}'
 		// );
 		const data = req.body;
-		const name = findName(
-			InfoRows,
-			buildLink(data.site, data.username)
-		).Name;
-
-		if (!name) {
-			res.send({ status: { status: "NoName" } });
-			res.end();
-			return;
+		if (!data.name) {
+			let name = "";
+			name = findName(InfoRows, buildLink(data.site, data.username)).Name;
+			if (!name || name === "") {
+				res.send({ status: { status: "NoName" } });
+				res.end();
+				return;
+			}
+			console.log({ name });
+			data.name = name;
 		}
-		console.log({ name });
-		data.name = name;
+
 		//commit the code to github
 		const hyperLink = CommitCode(data);
 		//edit the right cells on the sheet

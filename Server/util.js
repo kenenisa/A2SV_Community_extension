@@ -196,26 +196,19 @@ module.exports = {
 	findNextProblems: async (ProgressSheet, ProgressSheetGrid, pos) => {
 		await ProgressSheet.loadCells(["4:4", `${pos.row + 1}:${pos.row + 1}`]);
 		let x = 0;
-		let col = [];
+		const result = [];
 		while (ProgressSheetGrid.columnCount > x) {
-			if (col.length < 3) {
-				const cell = ProgressSheet.getCell(pos.row, 6 + x);
-				if (!cell.value) {
-					col.push(6 + x);
-				}
-			} else {
-				col.length < 4;
+			if (result.length > 3) break;
+			const cell = ProgressSheet.getCell(pos.row, 6 + x);
+			if (!cell.value) {
+				const resultCell = ProgressSheet.getCell(3, 6 + x);
+				result.push({
+					link: resultCell.hyperlink,
+					title: resultCell.value,
+				});
 			}
 			x += 2;
 		}
-		const result = [];
-		col.forEach((c) => {
-			const resultCell = ProgressSheet.getCell(3, c);
-			result.push({
-				link: resultCell.hyperlink,
-				title: resultCell.value,
-			});
-		});
 		return result;
 	},
 };
