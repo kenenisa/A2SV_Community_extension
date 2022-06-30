@@ -72,7 +72,7 @@ app.use(express.json());
 			solved: data.qTitle,
 			spent: Math.floor(data.time / 1000 / 60),
 			next,
-			name,
+			name:data.name
 		});
 		res.end();
 	});

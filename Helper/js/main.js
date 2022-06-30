@@ -19,12 +19,18 @@ chrome.storage.sync.get(["name"], function (result) {
 
 function populateNextProblems(problems, result) {
 	let p = "";
+	let exists = false;
 	problems.forEach((problem) => {
-		p += '<button class="next-btn">' + problem + "</button>";
+		if (problem) {
+			exists = true;
+			p += '<button class="next-btn">' + problem + "</button>";
+		}
 	});
-	id("next").style.display = "block";
-	id("next-problems").innerHTML = p;
-	attachEventHandlers(result);
+	if (exists) {
+		id("next").style.display = "block";
+		id("next-problems").innerHTML = p;
+		attachEventHandlers(result);
+	}
 }
 function attachEventHandlers(result) {
 	const buttons = cls("next-btn");
@@ -46,5 +52,10 @@ chrome.storage.sync.get(["nextProblems"], function (result) {
 		);
 	}
 });
+id("set-btn").addEventListener("click", function () {
+	const name = id("setup-name").value;
+	chrome.storage.sync.set({name},function(){
+		window.location.reload()
+	})
 
-// populateNextProblems(["Reverse Linked List", "Linked List", "Cycle Detection"]);
+});

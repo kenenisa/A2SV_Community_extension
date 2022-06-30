@@ -1,5 +1,5 @@
 body {
-	width: 15rem;
+	width: 17.5rem;
 	height: auto;
 }
 img {
@@ -52,7 +52,7 @@ a {
 	justify-content: center;
 	margin: 1rem 0;
 }
-.register div {
+.register div.btn {
 	margin-left: 1rem;
 	background: rgba(42, 16, 158, 0.2);
 	border: 0px solid black;
@@ -61,8 +61,26 @@ a {
 	font-size: 1rem;
 	cursor: pointer;
 }
-.register div:hover {
+.register div.btn:hover,.setup button:hover {
 	text-decoration: underline;
+}
+.setup span{
+	font-size:0.85rem
+	/* margin: 0 0.5rem; */
+}
+.setup input{
+	margin-top:0.5rem;
+	padding:0.3rem 0.3rem;
+	border-radius:5px;
+	border: 1px solid #ddd;
+	width:14rem;
+}
+.setup button{
+	border:1px solid #ddd;
+	background: #ddd;
+	border-radius:5px;
+	padding:0.3rem 0.5rem;
+	cursor: pointer;
 }
 .user {
 	font-size: 0.9rem;
@@ -83,7 +101,7 @@ a {
 	font-weight: 400;
 	border: unset;
 	background: rgba(0, 0, 0, 0.04);
-  margin-bottom:0.2rem
+  	margin-bottom:0.2rem
 }
 .next-btn:hover {
 	background: #ddd;
