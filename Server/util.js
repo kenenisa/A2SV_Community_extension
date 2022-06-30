@@ -82,11 +82,11 @@ module.exports = {
 					message: msg,
 					token: process.env.GITHUB_API_TOKEN,
 					author: {
-						name: "Robot",
+						name: "Automated Robot",
 						email: "helper@a2sv-353720.iam.gserviceaccount.com",
 					},
 					committer: {
-						name: "Robot",
+						name: "Automated Robot",
 						email: "helper@a2sv-353720.iam.gserviceaccount.com",
 					},
 				})

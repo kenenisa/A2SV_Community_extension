@@ -65,15 +65,17 @@ app.use(express.json());
 				status
 			);
 		}
-		console.log("DONE!", (new Date().getTime() - timer) / 1000 + "s");
-		res.json({
+		const response = {
 			status,
 			subs: data.submissions,
 			solved: data.qTitle,
 			spent: Math.floor(data.time / 1000 / 60),
 			next,
 			name:data.name
-		});
+		}
+		console.log(response);
+		console.log("DONE!", (new Date().getTime() - timer) / 1000 + "s");
+		res.json(response);
 		res.end();
 	});
 

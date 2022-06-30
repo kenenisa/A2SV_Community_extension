@@ -53,9 +53,11 @@ chrome.storage.sync.get(["nextProblems"], function (result) {
 	}
 });
 id("set-btn").addEventListener("click", function () {
-	const name = id("setup-name").value;
-	chrome.storage.sync.set({name},function(){
-		window.location.reload()
-	})
-
+	let name = id("setup-name").value;
+	if (name && name !== "") {
+		name = name.replace(/\s/g, "_");
+		chrome.storage.sync.set({ name }, function () {
+			window.location.reload();
+		});
+	}
 });
